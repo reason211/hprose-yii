@@ -52,9 +52,14 @@ class RpcClient extends Component
 
             $list = [];
             foreach ($responses as $response) {
-                foreach ($response->data as $name => $url) {
-                    $list[$name][] = $url;
+                // 防止某些 discovery 节点访问异常导致整个rpc服务无法访问
+                try {
+                    foreach ($response->data as $name => $url) {
+                        $list[$name][] = $url;
+                    }
+                } catch (\Throwable $th) {
                 }
+       
             }
 
             $this->_config = $list;
